@@ -1,0 +1,642 @@
+
+SQL> SPOOL D:\DBMS_Project.txt
+SQL> create table airport (
+  2      airport_id numeric(4) constraint airport_id_pk primary key,
+  3      airport_name varchar(50),
+  4      city varchar(20),
+  5      country varchar(20)
+  6  );
+
+Table created.
+
+SQL> create table flight (
+  2      flight_id numeric(4) constraint flight_id_pk primary key,
+  3      flight_name varchar(50),
+  4      airlines_name varchar(20),
+  5      airport_id numeric(4) references airport,
+  6      destination varchar(20),
+  7      model varchar(10),
+  8      capacity numeric(20) check (capacity > 0)
+  9  );
+
+Table created.
+
+SQL> create table airlines(
+  2  airlines_name varchar(50) constraint airlines_name_pk primary key,
+  3  origin_country varchar(20),
+  4  airport_id numeric(4) references airport);
+
+Table created.
+
+SQL> create table passenger (
+  2      passenger_id numeric(7) constraint p_id_pk primary key,
+
+  3      passenger_name varchar(20),
+  4      mobile_no numeric(10),
+  5      passenger_city varchar(10)
+  6  );
+
+Table created.
+
+SQL> create table ticket (
+  2      ticket_id varchar(10) constraint ticket_id_pk primary key,
+  3      ticket_type varchar(5),
+  4      travel_date date,
+  5      passenger_id numeric(7) references passenger
+  6  );
+
+Table created.
+
+SQL> create table booking (
+  2      booking_id varchar(10) constraint booking_id_pk primary key,
+  3      from_ varchar(15),
+  4      to_ varchar(15),
+  5      fare numeric(10) check (fare >= 0),
+  6      ticket_id varchar(10) references ticket,
+  7      flight_id numeric(4) references flight
+  8  );
+
+Table created.
+
+SQL> create table schedule (
+  2      schedule_id varchar(10) constraint schedule_id_pk primary key,
+  3      departure_time numeric(8) check (departure_time >= 00000000 and departure_time <= 23595959),
+  4      arrival_time numeric(8) check (arrival_time >= 00000000 and arrival_time <= 23595959),
+  5      flight_id numeric(4) references flight,
+  6      airport_id numeric(4) references airport
+  7  );
+
+Table created.
+
+SQL> ALTER TABLE flight ADD CONSTRAINT flight_id_length CHECK (LENGTH(flight_id) = 4);
+
+Table altered.
+
+SQL> ALTER TABLE flight ADD CONSTRAINT airport_id_length CHECK (LENGTH(airport_id) = 4);
+
+Table altered.
+
+SQL> ALTER TABLE flight ADD CONSTRAINT model_prefix CHECK (model LIKE 'airbus%' OR model LIKE 'Boeing%');
+
+Table altered.
+
+SQL> ALTER TABLE passenger ADD CONSTRAINT passenger_id_length CHECK (LENGTH(passenger_id) = 4);
+
+Table altered.
+
+SQL> ALTER TABLE passenger ADD CONSTRAINT mobile_no_length CHECK (LENGTH(mobile_no) = 10);
+
+Table altered.
+
+SQL> ALTER TABLE passenger ADD email varchar(50);
+
+Table altered.
+
+SQL> ALTER TABLE passenger ADD CONSTRAINT email_suffix CHECK (email LIKE '%@gmail.com');
+
+Table altered.
+
+SQL> ALTER TABLE ticket ADD CONSTRAINT ticket_type_values CHECK (ticket_type IN ('Economy', 'Business', 'First Class'));
+
+Table altered.
+
+SQL> ALTER TABLE booking ADD CONSTRAINT booking_id_length CHECK (LENGTH(booking_id) = 6);
+
+Table altered.
+
+SQL> 
+SQL> INSERT INTO Airport (airport_id, airport_name, city, country)
+  2  VALUES ('1234', 'JFK Airport', 'New York', 'USA');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Airport (airport_id, airport_name, city, country)
+  2  VALUES ('5678', 'Heathrow', 'London', 'UK');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Airport (airport_id, airport_name, city, country)
+  2  VALUES ('7890', 'Narita', 'Tokyo', 'Japan');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Airport (airport_id, airport_name, city, country)
+  2  VALUES ('9876', 'Dubai Intl', 'Dubai', 'UAE');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Airport (airport_id, airport_name, city, country)
+  2  VALUES ('3456', 'Tegel Airport', 'Berlin', 'Germany');
+
+1 row created.
+
+SQL> INSERT INTO Passenger (passenger_id, passenger_name, mobile_no, passenger_city) VALUES ('4444', 'Maria Garcia', '9998887776', 'Madrid');
+
+1 row created.
+
+SQL> INSERT INTO Passenger (passenger_id, passenger_name, mobile_no, passenger_city) VALUES ('1111', 'John Smith', '1234567890', 'New York');
+
+1 row created.
+
+SQL> INSERT INTO Passenger (passenger_id, passenger_name, mobile_no, passenger_city) VALUES ('2222', 'Emily Johnson', '9876543210', 'London');
+
+1 row created.
+
+SQL> INSERT INTO Passenger (passenger_id, passenger_name, mobile_no, passenger_city) VALUES ('3333', 'Satoshi Tanaka', '5551234567', 'Tokyo');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Passenger (passenger_id, passenger_name, mobile_no, passenger_city) VALUES ('5555', 'Wei Chen', '7776665554', 'Beijing');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Passenger (passenger_id, passenger_name, mobile_no, passenger_city) VALUES ('6666', 'Ahmed Khan', '3332221111', 'Dubai');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Passenger (passenger_id, passenger_name, mobile_no, passenger_city) VALUES ('7777', 'Sophie Dupont', '6667778888', 'Paris');
+
+1 row created. 
+
+SQL> 
+SQL> INSERT INTO Passenger (passenger_id, passenger_name, mobile_no, passenger_city) VALUES ('8888', 'Alessandro Rossi', '4445556666', 'Rome');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Passenger (passenger_id, passenger_name, mobile_no, passenger_city) VALUES ('1010', 'Kim Ji-hyun', '7778889999', 'Seoul');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Passenger (passenger_id, passenger_name, mobile_no, passenger_city) VALUES ('1212', 'David Smith', '1112223333', 'Sydney');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Passenger (passenger_id, passenger_name, mobile_no, passenger_city) VALUES ('1313', 'Anna Petrova', '5554443333', 'Moscow');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Passenger (passenger_id, passenger_name, mobile_no, passenger_city) VALUES ('1414', 'Carlos Lopez', '6665554444', 'Madrid');
+
+1 row created.
+
+SQL> insert into Flight values (7891,'FLY123','Delta Airlines',1234,'New York','Boeing 737',150);
+
+1 row created.
+
+SQL> insert into Flight values (3456,'JET456','Japan Airlines',7890,'Tokyo','Boeing 787',180);
+
+1 row created.
+
+SQL> insert into Flight values (8765,'WINGS202','Lufthansa',3456,'Berlin','Boeing 747',250);
+
+1 row created.
+
+SQL> insert into Flight values (8901,'SKY123','British Airways',5678,'London','Boeing 777',300);
+
+1 row created.
+
+SQL> insert into Flight values (5678,'SKY789','British Airways',5678,'London','Airbus A320',200);
+
+1 row created.
+
+SQL> insert into Flight values (1234,'AIR101','Emirates',9876,'Dubai','Airbus A380',300);
+
+1 row created.
+
+SQL> insert into Flight values (2345,'FLY321','Delta Airlines',1234,'New York','Airbus A330',180);
+
+1 row created.
+
+SQL> insert into Airlines values('Delta Airlines','USA',1234);
+
+1 row created.
+
+SQL> insert into Airlines values('British Airways','UK',5678);
+
+1 row created.
+
+SQL> insert into Airlines values('Japan Airlines','Japan',7890);
+
+1 row created.
+
+SQL> insert into Airlines values('Emirates','UAE',9876);
+
+1 row created.
+
+SQL> insert into Airlines values('Lufthansa','Germany',3456);
+
+1 row created.
+
+SQL> select * from booking id;
+
+no rows selected
+
+SQL> INSERT INTO TICKET (TICKET_ID, TICKET_TYPE, TRAVEL_DATE, PASSENGER_ID)
+  2  VALUES (98765, 'Economy', TO_DATE('2024-04-05', 'YYYY-MM-DD'), 1111);
+
+1 row created.
+
+SQL> INSERT INTO TICKET (TICKET_ID, TICKET_TYPE, TRAVEL_DATE, PASSENGER_ID) VALUES (87654,'Business', TO_DATE('2024-04-06', 'YYYY-MM-DD'), 2222);
+
+1 row created.
+
+SQL> INSERT INTO TICKET (TICKET_ID, TICKET_TYPE, TRAVEL_DATE, PASSENGER_ID) VALUES (76543,'Economy', TO_DATE('2024-04-07', 'YYYY-MM-DD'), 3333);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO TICKET (TICKET_ID, TICKET_TYPE, TRAVEL_DATE, PASSENGER_ID) VALUES (65432,'Economy', TO_DATE('2024-04-08', 'YYYY-MM-DD'), 4444);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO TICKET (TICKET_ID, TICKET_TYPE, TRAVEL_DATE, PASSENGER_ID) VALUES (54321,'Business', TO_DATE('2024-04-09', 'YYYY-MM-DD'), 5555);
+
+1 row created.
+
+SQL> INSERT INTO TICKET (TICKET_ID, TICKET_TYPE, TRAVEL_DATE, PASSENGER_ID) VALUES (43210,'First_Class', TO_DATE('2024-04-10', 'YYYY-MM-DD'), 6666);
+
+1 row created.
+
+SQL> INSERT INTO TICKET (TICKET_ID, TICKET_TYPE, TRAVEL_DATE, PASSENGER_ID) VALUES (32109,'First Class', TO_DATE('2024-04-11', 'YYYY-MM-DD'), 7777);
+
+1 row created.
+
+SQL> insert into booking values('AB1234','JFK','Heathrow',5000,98765,7891);
+
+1 row created.
+
+SQL> insert into booking values('CD2345','Heathrow','Narita',10000,87654,5678);
+
+1 row created.
+
+SQL> insert into booking values('EF3456','Narita','JFK',8000,76543,3456);
+
+1 row created.
+
+SQL> insert into booking values('GH4567','Dubai Intl','Heathrow',7000,65432,1234);
+
+1 row created.
+
+SQL> insert into booking values('IJ5678','Tegel','Narita',9000,54321,8765);
+
+1 row created.
+
+SQL> insert into booking values('KL6789','Narita','JFK',12000,43210,7891);
+
+1 row created.
+
+SQL> insert into booking values('MN7890','JFK','Dubai Intl',15000,32109,5678);
+
+1 row created.
+
+SQL> INSERT INTO TICKET (TICKET_ID, TICKET_TYPE, TRAVEL_DATE, PASSENGER_ID) VALUES (21098,'Economy', TO_DATE('2024-04-12', 'YYYY-MM-DD'), 8888);
+
+1 row created.
+
+SQL> INSERT INTO TICKET (TICKET_ID, TICKET_TYPE, TRAVEL_DATE, PASSENGER_ID) VALUES (10987,'Business', TO_DATE('2024-04-13', 'YYYY-MM-DD'), 9999);
+
+1 row created.
+
+SQL> INSERT INTO TICKET (TICKET_ID, TICKET_TYPE, TRAVEL_DATE, PASSENGER_ID) VALUES (10986,'First_Class', TO_DATE('2024-04-12', 'YYYY-MM-DD'), 1010);
+
+1 row created.
+
+SQL> INSERT INTO TICKET (TICKET_ID, TICKET_TYPE, TRAVEL_DATE, PASSENGER_ID) VALUES (12345,'Economy', TO_DATE('2024-04-15', 'YYYY-MM-DD'), 1212);
+
+1 row created.
+
+SQL> INSERT INTO TICKET (TICKET_ID, TICKET_TYPE, TRAVEL_DATE, PASSENGER_ID) VALUES (23456,'Business', TO_DATE('2024-04-16', 'YYYY-MM-DD'), 1313);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO TICKET (TICKET_ID, TICKET_TYPE, TRAVEL_DATE, PASSENGER_ID) VALUES (34567,'Economy', TO_DATE('2024-04-17', 'YYYY-MM-DD'), 1414);
+
+1 row created.
+
+SQL> insert into booking values('QR9012','Heathrow','Tegel',9500,10987,8765);
+
+1 row created.
+
+SQL> insert into booking values('ST0123','Tegel','Narita',11000,10986,3456);
+
+1 row created.
+
+SQL> insert into booking values('UV1234','JFK','Heathrow',5500,12345,7891);
+
+1 row created.
+
+Q Retrieve all flights departing from a specific airport:
+
+SQL> SELECT f.flight_id, f.flight_name, f.destination, f.model, f.capacity
+  2  FROM flight f
+  3  WHERE f.airport_id = (SELECT airport_id FROM airport WHERE airport_name = 'AirportName');
+
+no rows selected
+
+Q List all bookings made by a specific passenger:
+
+SQL> SELECT b.booking_id, b.from_, b.to_, b.fare
+  2  FROM booking b
+  3  JOIN ticket t ON b.ticket_id = t.ticket_id
+  4  JOIN passenger p ON t.passenger_id = p.passenger_id
+  5  WHERE p.passenger_name = 'PassengerName';
+
+no rows selected
+
+Find all flights operated by a specific airline:
+
+SQL> SELECT f.flight_id, f.flight_name, f.destination, f.model, f.capacity
+  2  FROM flight f
+  3  JOIN airlines a ON f.airlines_name = a.airlines_name
+  4  WHERE a.airlines_name = 'AirlineName';
+
+no rows selected
+
+Q Retrieve the number of bookings for each flight:
+
+SQL> SELECT f.flight_id, f.flight_name, COUNT(b.booking_id) AS num_bookings
+  2  FROM flight f
+  3  LEFT JOIN booking b ON f.flight_id = b.flight_id
+  4  GROUP BY f.flight_id, f.flight_name;
+
+ FLIGHT_ID FLIGHT_NAME                                        NUM_BOOKINGS      
+---------- -------------------------------------------------- ------------      
+      1234 AIR101                                                        1      
+      7891 FLY123                                                        3      
+      5678 SKY789                                                        2      
+      3456 JET456                                                        2      
+      8765 WINGS202                                                      2      
+      8901 SKY123                                                        0      
+      2345 FLY321                                                        0      
+
+7 rows selected.
+
+Q Count the number of flights departing from each airport:
+
+SQL> SELECT airport_id, COUNT(flight_id) AS num_flights FROM flight GROUP BY airport_id;
+
+AIRPORT_ID NUM_FLIGHTS                                                          
+---------- -----------                                                          
+      1234           2                                                          
+      7890           1                                                          
+      5678           2                                                          
+      9876           1                                                          
+      3456           1                                                          
+
+Q List all bookings with their corresponding passengers and flights: 
+
+SQL> SELECT b.booking_id, b.from_, b.to_, b.fare, p.passenger_name, f.flight_name
+  2  FROM booking b
+  3  JOIN ticket t ON b.ticket_id = t.ticket_id
+  4  JOIN passenger p ON t.passenger_id = p.passenger_id
+  5  JOIN flight f ON b.flight_id = f.flight_id;
+
+BOOKING_ID FROM_           TO_                   FARE PASSENGER_NAME            
+---------- --------------- --------------- ---------- --------------------      
+FLIGHT_NAME                                                                     
+--------------------------------------------------                              
+GH4567     Dubai Intl      Heathrow              7000 Maria Garcia              
+AIR101                                                                          
+                                                                                
+AB1234     JFK             Heathrow              5000 John Smith                
+FLY123                                                                          
+                                                                                
+CD2345     Heathrow        Narita               10000 Emily Johnson             
+SKY789                                                                          
+                                                                                
+
+BOOKING_ID FROM_           TO_                   FARE PASSENGER_NAME            
+---------- --------------- --------------- ---------- --------------------      
+FLIGHT_NAME                                                                     
+--------------------------------------------------                              
+EF3456     Narita          JFK                   8000 Satoshi Tanaka            
+JET456                                                                          
+                                                                                
+IJ5678     Tegel           Narita                9000 Wei Chen                  
+WINGS202                                                                        
+                                                                                
+KL6789     Narita          JFK                  12000 Ahmed Khan                
+FLY123                                                                          
+                                                                                
+
+BOOKING_ID FROM_           TO_                   FARE PASSENGER_NAME            
+---------- --------------- --------------- ---------- --------------------      
+FLIGHT_NAME                                                                     
+--------------------------------------------------                              
+MN7890     JFK             Dubai Intl           15000 Sophie Dupont             
+SKY789                                                                          
+                                                                                
+ST0123     Tegel           Narita               11000 Kim Ji-hyun               
+JET456                                                                          
+                                                                                
+UV1234     JFK             Heathrow              5500 David Smith               
+FLY123                                                                          
+                                                                                
+
+9 rows selected.
+
+Q Find the total revenue generated by each airline from ticket sales:
+
+SQL> SELECT a.airlines_name, SUM(b.fare) AS total_revenue
+  2  FROM booking b
+  3  JOIN flight f ON b.flight_id = f.flight_id
+  4  JOIN airlines a ON f.airlines_name = a.airlines_name
+  5  GROUP BY a.airlines_name;
+
+AIRLINES_NAME                                      TOTAL_REVENUE                
+-------------------------------------------------- -------------                
+Japan Airlines                                             19000                
+British Airways                                            25000                
+Emirates                                                    7000                
+Delta Airlines                                             22500                
+Lufthansa                                                  18500                
+
+Q List all flights with their corresponding airlines and destinations:
+
+SQL> SELECT f.*, a.airlines_name, a.origin_country
+  2  FROM flight f
+  3  JOIN airlines a ON f.airlines_name = a.airlines_name;
+
+ FLIGHT_ID FLIGHT_NAME                                                          
+---------- --------------------------------------------------                   
+AIRLINES_NAME        AIRPORT_ID DESTINATION          MODEL                      
+-------------------- ---------- -------------------- --------------------       
+  CAPACITY AIRLINES_NAME                                                        
+---------- --------------------------------------------------                   
+ORIGIN_COUNTRY                                                                  
+--------------------                                                            
+      7891 FLY123                                                               
+Delta Airlines             1234 New York             Boeing 737                 
+       150 Delta Airlines                                                       
+USA                                                                             
+                                                                                
+
+ FLIGHT_ID FLIGHT_NAME                                                          
+---------- --------------------------------------------------                   
+AIRLINES_NAME        AIRPORT_ID DESTINATION          MODEL                      
+-------------------- ---------- -------------------- --------------------       
+  CAPACITY AIRLINES_NAME                                                        
+---------- --------------------------------------------------                   
+ORIGIN_COUNTRY                                                                  
+--------------------                                                            
+      3456 JET456                                                               
+Japan Airlines             7890 Tokyo                Boeing 787                 
+       180 Japan Airlines                                                       
+Japan                                                                           
+                                                                                
+
+ FLIGHT_ID FLIGHT_NAME                                                          
+---------- --------------------------------------------------                   
+AIRLINES_NAME        AIRPORT_ID DESTINATION          MODEL                      
+-------------------- ---------- -------------------- --------------------       
+  CAPACITY AIRLINES_NAME                                                        
+---------- --------------------------------------------------                   
+ORIGIN_COUNTRY                                                                  
+--------------------                                                            
+      8765 WINGS202                                                             
+Lufthansa                  3456 Berlin               Boeing 747                 
+       250 Lufthansa                                                            
+Germany                                                                         
+                                                                                
+
+ FLIGHT_ID FLIGHT_NAME                                                          
+---------- --------------------------------------------------                   
+AIRLINES_NAME        AIRPORT_ID DESTINATION          MODEL                      
+-------------------- ---------- -------------------- --------------------       
+  CAPACITY AIRLINES_NAME                                                        
+---------- --------------------------------------------------                   
+ORIGIN_COUNTRY                                                                  
+--------------------                                                            
+      8901 SKY123                                                               
+British Airways            5678 London               Boeing 777                 
+       300 British Airways                                                      
+UK                                                                              
+                                                                                
+
+ FLIGHT_ID FLIGHT_NAME                                                          
+---------- --------------------------------------------------                   
+AIRLINES_NAME        AIRPORT_ID DESTINATION          MODEL                      
+-------------------- ---------- -------------------- --------------------       
+  CAPACITY AIRLINES_NAME                                                        
+---------- --------------------------------------------------                   
+ORIGIN_COUNTRY                                                                  
+--------------------                                                            
+      5678 SKY789                                                               
+British Airways            5678 London               Airbus A320                
+       200 British Airways                                                      
+UK                                                                              
+                                                                                
+
+ FLIGHT_ID FLIGHT_NAME                                                          
+---------- --------------------------------------------------                   
+AIRLINES_NAME        AIRPORT_ID DESTINATION          MODEL                      
+-------------------- ---------- -------------------- --------------------       
+  CAPACITY AIRLINES_NAME                                                        
+---------- --------------------------------------------------                   
+ORIGIN_COUNTRY                                                                  
+--------------------                                                            
+      1234 AIR101                                                               
+Emirates                   9876 Dubai                Airbus A380                
+       300 Emirates                                                             
+UAE                                                                             
+                                                                                
+
+ FLIGHT_ID FLIGHT_NAME                                                          
+---------- --------------------------------------------------                   
+AIRLINES_NAME        AIRPORT_ID DESTINATION          MODEL                      
+-------------------- ---------- -------------------- --------------------       
+  CAPACITY AIRLINES_NAME                                                        
+---------- --------------------------------------------------                   
+ORIGIN_COUNTRY                                                                  
+--------------------                                                            
+      2345 FLY321                                                               
+Delta Airlines             1234 New York             Airbus A330                
+       180 Delta Airlines                                                       
+USA                                                                             
+                                                                                
+
+7 rows selected.
+
+Q Find the total number of bookings for each destination city:
+
+SQL> SELECT f.destination, COUNT(b.booking_id) AS num_bookings
+  2  FROM booking b
+  3  JOIN flight f ON b.flight_id = f.flight_id
+  4  GROUP BY f.destination;
+
+DESTINATION          NUM_BOOKINGS                                               
+-------------------- ------------                                               
+London                          2                                               
+Tokyo                           2                                               
+New York                        3                                               
+Dubai                           1                                               
+Berlin                          2                                               
+
+
+
+SQL> CREATE OR REPLACE FUNCTION get_flights_from_airport(p_airport_name IN VARCHAR2)
+  2  RETURN SYS_REFCURSOR
+  3  IS
+  4    v_cursor SYS_REFCURSOR;
+  5  BEGIN
+  6    OPEN v_cursor FOR
+  7    SELECT f.flight_id, f.flight_name, f.destination, f.model, f.capacity
+  8    FROM flight f
+  9    WHERE f.airport_id = (SELECT airport_id FROM airport WHERE airport_name = p_airport_name);
+ 10    RETURN v_cursor;
+ 11  END;
+ 12  /
+
+Function created.
+
+SQL> CREATE OR REPLACE FUNCTION get_bookings_by_passenger(p_passenger_name IN VARCHAR2)
+  2  RETURN SYS_REFCURSOR
+  3  IS
+  4    v_cursor SYS_REFCURSOR;
+  5  BEGIN
+  6    OPEN v_cursor FOR
+  7    SELECT b.booking_id, b.from_, b.to_, b.fare
+  8    FROM booking b
+  9    JOIN ticket t ON b.ticket_id = t.ticket_id
+ 10    JOIN passenger p ON t.passenger_id = p.passenger_id
+ 11    WHERE p.passenger_name = p_passenger_name;
+ 12    RETURN v_cursor;
+ 13  END;
+ 14  /
+
+Function created.
+
+SQL> CREATE OR REPLACE FUNCTION get_flights_by_airline(p_airline_name IN VARCHAR2)
+  2  RETURN SYS_REFCURSOR
+  3  IS
+  4    v_cursor SYS_REFCURSOR;
+  5  BEGIN
+  6    OPEN v_cursor FOR
+  7    SELECT f.flight_id, f.flight_name, f.destination, f.model, f.capacity
+  8    FROM flight f
+  9    JOIN airlines a ON f.airlines_name = a.airlines_name
+ 10    WHERE a.airlines_name = p_airline_name;
+ 11    RETURN v_cursor;
+ 12  END;
+ 13  /
+
+Function created.
+
+SQL> spool off;
+
+
+
+
